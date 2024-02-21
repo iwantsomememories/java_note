@@ -61,3 +61,50 @@ int read() //一次读一个字节数据
 int read(byte[] buffer) //一次读取多个数据，返回值为读取到的数据长度
 ```
 
+## 练习
+
+### 练习一—拷贝文件夹
+
+```java
+	/*
+    拷贝文件夹
+     */
+    public void test1() throws IOException {
+        //1.数据源
+        File src = new File("数据源");
+        //2.目的地
+        File dst = new File("目的地");
+        //3.拷贝函数
+        copydir(src, dst);
+
+    }
+
+    private void copydir(File src, File dst) throws IOException {
+        dst.mkdirs();
+        //递归
+        //1.进入数据源
+        File[] files = src.listFiles();
+        //2.遍历数组
+        for(File file : files){
+            if(file.isFile()){
+                //3.判断文件，拷贝
+                FileInputStream fis = new FileInputStream(file);
+                FileOutputStream fos = new FileOutputStream(new File(dst, file.getName()));
+                byte[] bytes = new byte[1024];
+                int len;
+                while((len = fis.read(bytes)) != -1)
+                {
+                    fos.write(bytes, 0, len);
+                }
+                fos.close();
+                fis.close();
+            }else {
+                //4.判断文件夹，递归
+                copydir(file, new File(dst, file.getName()));
+
+            }
+        }
+
+    }
+```
+
