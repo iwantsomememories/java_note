@@ -108,3 +108,25 @@ int read(byte[] buffer) //一次读取多个数据，返回值为读取到的数
     }
 ```
 
+### 练习二—文件的加解密
+
+```java
+    /*
+    文件的加密,解密操作为对加密文件再进行一次加密
+     */
+    public void test2() throws IOException {
+        //1.创建对象关联原始文件
+        FileInputStream fis = new FileInputStream("myFile/trump.png");
+        //2.创建对象关联加密文件
+        FileOutputStream fos = new FileOutputStream("myFile/trump_ency.png");
+        //3.加密处理
+        int b;
+        while((b = fis.read()) != -1){
+            fos.write(b^2);
+        }
+        //4.释放资源
+        fos.close();
+        fis.close();
+    }
+```
+
