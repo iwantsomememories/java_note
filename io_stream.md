@@ -130,3 +130,56 @@ int read(byte[] buffer) //一次读取多个数据，返回值为读取到的数
     }
 ```
 
+### 练习三—修改文件数据
+
+```java
+    /*
+    修改文件中的数据（对文件中的数据进行排序）
+     */
+    public void test3() throws IOException {
+        //1.读取数据
+        FileReader fr = new FileReader("myFile/ccc.txt");
+        StringBuilder sb = new StringBuilder();
+        int ch;
+        while ((ch = fr.read()) != -1){
+            sb.append((char)ch);
+        }
+        fr.close();
+        System.out.println(sb);
+        //2.排序
+        /*
+        String str = sb.toString();
+        String[] arrstr = str.split("-");
+        ArrayList<Integer> list = new ArrayList<>();
+        for(String s : arrstr){
+            int i = Integer.parseInt(s);
+            list.add(i);
+        }
+        Collections.sort(list);
+        System.out.println(list);
+        */
+        Integer[] array = Arrays.stream(sb.toString()
+                        .split("-"))
+                .map(Integer::parseInt)
+                .sorted()
+                .toArray(Integer[]::new);
+        //3.写回
+        /*
+        FileWriter fw = new FileWriter("myFile/ccc.txt");
+        for(int i = 0; i < list.size(); i++){
+            if(i == list.size() -1){
+                fw.write(list.get(i) + "");
+            } else{
+                fw.write(list.get(i) + "-");
+            }
+        }
+        fw.close();
+        */
+        FileWriter fw = new FileWriter("myFile/ccc.txt");
+        String s = Arrays.toString(array).replace("," , "-");
+        String substring = s.substring(1, s.length() - 1);
+        fw.write(substring);
+        fw.close();
+    }
+```
+
