@@ -183,3 +183,44 @@ int read(byte[] buffer) //一次读取多个数据，返回值为读取到的数
     }
 ```
 
+## 高级流
+
+### 缓冲流
+
+**字节缓冲流：**底层自带长度为8192字节的缓冲区提高性能，由基本流包装而来，创建时需要关联基本流
+
+例：字节缓冲流拷贝文件
+
+```java
+    /*
+    字节缓冲流拷贝文件，一次读写一个字节
+     */
+    public void test4() throws IOException {
+        //1.创建缓冲流对象
+        BufferedInputStream bis = new BufferedInputStream(new FileInputStream("myFile/ccc.txt"));
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream("myFile/ccc_copy.txt"));
+        //2.循环读写到目的地
+        int b;
+        while ((b = bis.read()) != -1){
+            bos.write(b);
+        }
+        //3.释放资源
+        bos.close();
+        bis.close();
+    }
+```
+
+
+
+字节缓冲流提高效率原理：
+
+![](D:\code\java\java_note\653f22c34f58f74815dff90db5d3c5a.png)
+
+**字符缓冲流：**底层自带长度为8192字符的缓冲区提高性能，由基本流包装而来，创建时需要关联基本流。注：对于字符流提升不明显
+
+特有方法：
+
+输入流：public String readline()——读取一行数据，遇到回车换行结束。若无数据可读，返回null
+
+输出流：public void newLine()——跨平台的换行
+
