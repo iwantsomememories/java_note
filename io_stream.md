@@ -224,3 +224,90 @@ int read(byte[] buffer) //一次读取多个数据，返回值为读取到的数
 
 输出流：public void newLine()——跨平台的换行
 
+### 转换流
+
+![](D:\code\java\java_note\11f5a7f39aaf9c23e6ffcb694610eee.png)
+
+#### 基本用法：
+
+1.利用转换流按指定字符编码读取数据：
+
+```java
+//1.创建对象并指定字符编码
+FileReader fr = new FileReader("myFile/gbk.txt", Charset.forName("GBK"));
+//2.读取数据
+int ch;
+while ((ch = fr.read()) != -1)
+   System.out.print((char) ch);
+//3.释放资源
+fr.close();
+```
+
+2.利用转换流按指定字符编码写出数据：
+
+```java
+//1.创建输出流对象
+FileWriter fw = new FileWriter("", Charset.forName("GBK"));
+//2.写出数据
+fw.write("你好");
+//3.释放资源
+fw.close();
+```
+
+3.转换文件格式：
+
+```java
+FileReader fr = new FileReader("", Charset.forName("GBK"));
+FileWriter fw = new FileWriter("", Charset.forName("UTF-8"));
+int ch;
+while ((ch = fr.read()) != -1)
+    fw.write(ch);
+fw.close();
+fr.close();
+```
+
+4.利用字节流读取文件中的数据，每次读一整行：
+
+```java
+BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("myFile/gbk.txt"), "GBK"));
+String line;
+while((line = br.readLine()) != null){
+    System.out.println(line);
+}
+br.close();
+```
+
+### 序列化流
+
+![](D:\code\java\java_note\ZOOFBE}2Y3PW2~]S[61G3HI.png)
+
+![](D:\code\java\java_note\S%2N7~129{0%R}0G{J0~$F2.png)
+
+#### 基本用法：
+
+1.利用序列化流将对象写入本地文件：
+
+```java
+//1.创建对象
+student stu = new student("zhangsan", 23);
+//2.创建序列化流的对象/对象操作输出流
+ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("myFile/a.txt"));
+//3.写出数据
+oos.writeObject(stu);
+//4.释放资源
+oos.close();
+//注：对象需要实现Serializable（标记型接口，无抽象方法）
+```
+
+2.利用反序列化流读取本地文件中的对象：
+
+```java
+//1.创建反序列化流对象
+ObjectInputStream  ois = new ObjectInputStream(new FileInputStream("myFile/a.txt"));
+//2.读取数据
+Object o = ois.readObject();
+//3.打印对象
+System.out.println(o);
+//4.关闭资源
+ois.close();
+```
