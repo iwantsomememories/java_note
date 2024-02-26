@@ -360,3 +360,63 @@ System.out.println(o);
 //4.关闭资源
 ois.close();
 ```
+
+注：支持序列化的对象会计算得到一个long类型的版本号，可以手动设置。
+
+注：使用transient关键字标记的成员变量不参与序列化过程。
+
+3.序列化并反序列化多个对象：
+
+```java
+/*
+将多个自定义对象序列化到文件中，且对象个数不确定
+ */
+
+//1.序列化多个对象(利用数组)
+student s1 = new student("zhangsan", 23, "南京");
+student s2 = new student("lisi", 24, "天津");
+student s3 = new student("wangwu", 21, "山东");
+
+ArrayList<student> list = new ArrayList<>();
+list.add(s1);
+list.add(s2);
+list.add(s3);
+ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("myFile/a.txt"));
+oos.writeObject(list);
+
+oos.close();
+
+//2.反序列化对象
+ObjectInputStream ois = new ObjectInputStream(new FileInputStream("myFile/a.txt"));
+
+ArrayList<student> list1 = (ArrayList<student>) ois.readObject();
+
+for (student student : list1) {
+    System.out.println(student);
+}
+
+ois.close();
+```
+
+### 打印流
+
+#### 字节打印流
+
+一般是指:PrintStream, PrintWriter两个类。
+
+1. 只操作文件目的地。不操作数据源
+2. 特有的写出方法，可以实现数据原样写出
+3. 特有的写出方法，可以实现自动刷新，自动换行
+
+基本用法：
+
+```java
+PrintStream ps = new PrintStream(new FileOutputStream("myFile/a.txt"), true, "UTF-8");
+ps.println(97);
+ps.print(true);
+ps.printf("%s伯块", "3");
+ps.close();
+```
+
+
+
