@@ -418,5 +418,118 @@ ps.printf("%s伯块", "3");
 ps.close();
 ```
 
+#### 字符打印流
 
+构造方法、成员方法与字节打印流类似。由于字符打印流底层具有缓冲区，需要设置自动刷新。
+
+基本用法：
+
+```java
+//1.创建字符打印流的对象
+PrintWriter pw = new PrintWriter(new FileWriter("myFile/a.txt"), true);
+
+//2.写出数据
+pw.println("你好");
+pw.print(true);
+pw.printf("%s伯块", "3");
+
+//3.释放资源
+pw.close();
+```
+
+注：System.out为PrintStream类对象，在虚拟机启动时由虚拟机创建，默认指向控制台。它是系统的标准输出流，不能关闭。
+
+### 压缩流
+
+#### 解压缩流
+
+压缩包里的每一个文件在java中都是一个ZipEntry，解压的本质为将每一个ZipEntry按层级拷贝到目的地中。
+
+1.解压方法：
+
+```java
+//1.创建一个解压缩流
+ZipInputStream zip = new ZipInputStream(new FileInputStream(src));
+//2.获取压缩包里的每一个zipentry对象
+ZipEntry entry;
+while((entry = zip.getNextEntry()) != null){
+    System.out.println(entry);
+    if(entry.isDirectory()){
+        //文件夹
+        File file = new File(dst, entry.toString());
+        file.mkdirs();
+    } else {
+        //文件
+        File file = new File(dst, entry.toString());
+        FileOutputStream fos = new FileOutputStream(file);
+        int b;
+        while((b = zip.read()) != -1){
+            fos.write(b);
+        }
+        fos.close();
+        zip.closeEntry();
+    }
+}
+zip.close();
+```
+
+2.压缩方法：
+
+```java
+/*
+压缩单个文件
+*/
+
+//1.创建压缩流关联压缩包
+ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(new File(dst, "a.zip")));
+//2.创建zipentry对象
+ZipEntry entry = new ZipEntry("a.txt");
+//3.把zipentry对象放到压缩包中
+zos.putNextEntry(entry);
+//4.将src文件中的数据写到压缩包当中
+FileInputStream fis = new FileInputStream(src);
+int b;
+while ((b = fis.read()) != -1){
+    zos.write(b);
+}
+zos.closeEntry();;
+zos.close();
+```
+
+```java
+/*
+压缩文件夹
+*/
+public void test14() throws IOException{
+    //1.创建file对象表示要压缩的文件夹
+    File src = new File("myFile");
+    //2.创建File对象表示压缩包文件
+    File dst = new File(src.getName() + ".zip");
+    //3.创建压缩流
+    ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(dst));
+    //4.调用压缩方法
+    tozip(src, zos, src.getName());
+    //5.释放资源
+    zos.close();
+}
+
+public void tozip(File src, ZipOutputStream zos, String name) throws IOException {
+    File[] files = src.listFiles();
+    for (File file : files) {
+        if(file.isFile()){
+            ZipEntry entry = new ZipEntry(name + "\\" + file.getName());
+            zos.putNextEntry(entry);
+            FileInputStream fis = new FileInputStream(file);
+            int b;
+            while((b = fis.read()) != -1){
+                zos.write(b);
+            }
+            fis.close();
+            zos.closeEntry();
+        } else {
+            tozip(file, zos, name + "\\" + file.getName());
+        }
+    }
+}
+```
 
