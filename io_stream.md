@@ -533,3 +533,38 @@ public void tozip(File src, ZipOutputStream zos, String name) throws IOException
 }
 ```
 
+## 配置文件
+
+**Properties**——为hashtable非泛型子类
+
+写入配置文件
+
+```java
+//1.创建集合对象
+Properties prop = new Properties();
+
+//2.添加对象
+//一般只添加字符串
+prop.put("aaa", "111");
+prop.put("bbb", "222");
+prop.put("ccc", "333");
+prop.put("ddd", "444");
+
+//3.将数据以键值对的形式写到本地文件中
+FileOutputStream fos = new FileOutputStream("myFile\\a.properties");
+prop.store(fos, "test");
+fos.close();
+```
+
+读取配置文件
+
+```Java
+//1.创建集合
+Properties prop = new Properties();
+//2.读取本地配置文件中的数据
+FileInputStream fis = new FileInputStream("myFile\\a.properties");
+prop.load(fis);
+fis.close();
+//3.打印集合
+System.out.println(prop);
+```
